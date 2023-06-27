@@ -1,3 +1,3 @@
-module github.com/andruixxd31/begginer-project
+module github.com/andruixxd31/beginner-project
 
 go 1.19
