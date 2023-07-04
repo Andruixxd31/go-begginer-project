@@ -2,8 +2,13 @@ package book
 
 import (
 	"context"
+	"errors"
 
 	"github.com/google/uuid"
+)
+
+var (
+    ErrNotImplement = errors.New("Not implemented")
 )
 
 type Book struct {
@@ -32,18 +37,22 @@ func NewService(store Store) *Service {
     }
 }
 
-func (s *Service) GetBook(ctx context.Context, id uuid) (Book, error){
+func (s *Service) GetBook(ctx context.Context, id uuid) (Book, error) {
     return Book{}, nil
 }
 
-func (s *Service) CreateBook(ctx context.Context, book Book) (Book, error){
+func (s *Service) CreateBook(ctx context.Context, book Book) (Book, error) {
     return Book{}, nil
 }
 
-func (s *Service) UpdateBook(ctx context.Context, book Book) error{
+func (s *Service) UpdateBook(ctx context.Context, book Book) error {
     return nil
 }
 
-func (s *Service) DeleteBook(ctx context.Context, id uuid) error{
+func (s *Service) DeleteBook(ctx context.Context, id uuid) error {
+    return nil
+}
+
+func (s *Service) UpVoteBook(ctx context.Context, id uuid) error {
     return nil
 }
