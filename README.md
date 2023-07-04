@@ -1,5 +1,7 @@
 # go-begginer-project
 
+Project will be made by following the knowledge adquired from the rest-api and basic testing repos
+
 ## Running Locally 
 
 ```bash
