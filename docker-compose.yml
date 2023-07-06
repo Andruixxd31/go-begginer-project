@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:12.5-alpine
+    container_name: "books-db"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - books_network
+    volumes:
+      - books_postgres:/var/lib/postgresql/book-data
+
+  api:
+    build: .
+    container_name: "books-rest-api"
+    environment:
+      DB_USERNAME: "postgres"
+      DB_PASSWORD: "postgres" 
+      DB_DB: "postgres"
+      DB_HOST: "db"
+      DB_TABLE: "postgres"
+      DB_PORT: "5432"
+      SSL_MODE: "disable"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - books_network
+
+volumes:
+  books_postgres:
+
+networks:
+  books_network:
+    driver: bridge
