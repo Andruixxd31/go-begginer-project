@@ -2,10 +2,16 @@ package main
 
 import (
     "fmt"
-    "github.com/andruixxd31/beginner-project/internal/network"
 )
 
+func Run() error{
+    fmt.Println("Starting up app")
+    return nil
+}
+
 func main(){
-    fmt.Println("Hello World!")
-    network.Ping("dummy ip")
+    fmt.Println("Go app")
+    if err := Run(); err != nil {
+        fmt.Println(err)
+    }
 }
