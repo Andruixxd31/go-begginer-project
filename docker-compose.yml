@@ -5,9 +5,9 @@ services:
     image: postgres:12.5-alpine
     container_name: "books-db"
     ports:
-      - "5432:5432"
+      - "5433:5433"
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=book-social
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     networks:
@@ -21,10 +21,10 @@ services:
     environment:
       DB_USERNAME: "postgres"
       DB_PASSWORD: "postgres" 
-      DB_DB: "postgres"
+      DB_DB: "book-social"
       DB_HOST: "db"
       DB_TABLE: "postgres"
-      DB_PORT: "5432"
+      DB_PORT: "5433"
       SSL_MODE: "disable"
     ports:
       - "8080:8080"
