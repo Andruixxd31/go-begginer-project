@@ -1,7 +1,7 @@
 version: "3.8"
 
 services:
-  db:
+  book-db:
     image: postgres:12.5-alpine
     container_name: "books-db"
     ports:
@@ -22,14 +22,14 @@ services:
       DB_USERNAME: "postgres"
       DB_PASSWORD: "postgres" 
       DB_DB: "postgres"
-      DB_HOST: "db"
+      DB_HOST: "book-db"
       DB_TABLE: "postgres"
       DB_PORT: "5432"
       SSL_MODE: "disable"
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      - book-db
     networks:
       - books_network
 
