@@ -1,6 +1,15 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE IF NOT EXISTS book (
+Create Table IF NOT EXISTS account(
+    id uuid DEFAULT uuid_generate_v4(),
+    name VARCHAR(15) NOT NULL,
+    create_at Date NOT NULL DEFAULT CURRENT_DATE,
+    update_at Date NOT NULL,
+    deleted_at DATE NOT NULL,
+    CONSTRAINT account_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS book(
     id uuid DEFAULT uuid_generate_v4(),
     account_id uuid NOT NULL,
     title TEXT NOT NULL ,
@@ -14,16 +23,7 @@ CREATE TABLE IF NOT EXISTS book (
     CONSTRAINT account_fk FOREIGN KEY (account_id) REFERENCES account(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-Create Table IF NOT EXISTS account (
-    id uuid DEFAULT uuid_generate_v4(),
-    name VARCHAR(15) NOT NULL,
-    create_at Date NOT NULL DEFAULT CURRENT_DATE,
-    update_at Date NOT NULL,
-    deleted_at DATE NOT NULL,
-    CONSTRAINT account_pkey PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS upvote )
+CREATE TABLE IF NOT EXISTS upvote(
     account_id uuid NOT NULL,
     book_id uuid NOT NULL,
     
