@@ -3,12 +3,12 @@ package main
 import (
     "fmt"
 
-    "github.com/andruixxd31/beginner-project/internal/db"
+    "github.com/andruixxd31/beginner-project/internal/database"
 )
 
 func Run() error{
     fmt.Println("Starting up app")
-    db, err := db.NewDatabase()
+    db, err := database.NewDatabase()
     if err != nil {
         return fmt.Errorf("Failed to connect to db: %w", err)
     }
