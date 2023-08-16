@@ -1,9 +1,9 @@
 package main
 
 import (
-    "fmt"
+	"fmt"
 
-    "github.com/andruixxd31/beginner-project/internal/database"
+	"github.com/andruixxd31/beginner-project/internal/database"
 )
 
 func Run() error{
