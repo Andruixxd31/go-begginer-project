@@ -24,7 +24,7 @@ func convertAccountRowToAccount(accountRow AccountRow) account.Account {
     }
 }
 
-func (db *DB) GetAccountRow(ctx context.Context, id uuid.UUID) (account.Account, error) {
+func (db *DB) GetAccount(ctx context.Context, id uuid.UUID) (account.Account, error) {
     var accountRow AccountRow
     row := db.Client.QueryRowContext(
         ctx,
