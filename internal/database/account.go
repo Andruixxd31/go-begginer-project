@@ -41,3 +41,15 @@ func (db *DB) GetAccount(ctx context.Context, id uuid.UUID) (account.Account, er
     
     return convertAccountRowToAccount(accountRow), nil
 }
+
+func (db *DB) CreateAccount(ctx context.Context, dbAccount account.Account) (account.Account, error) {
+    return account.Account{}, nil
+}
+
+func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
+    return nil
+}
+
+func (db *DB) UpdateAccount(ctx context.Context, dbAccount account.Account) error { 
+    return nil
+}

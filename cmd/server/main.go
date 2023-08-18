@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
+	"github.com/andruixxd31/beginner-project/internal/account"
 	"github.com/andruixxd31/beginner-project/internal/database"
+	"github.com/google/uuid"
 )
 
 func Run() error{
@@ -17,6 +20,8 @@ func Run() error{
         fmt.Println("Failed to migrate db")
         return err
     }
+    accountService := account.NewService(db)
+    fmt.Println(accountService.GetAccount(context.Background(), uuid.MustParse("88f26b42-878b-4e60-a715-9773100fca8e")))
 
     return nil
 }

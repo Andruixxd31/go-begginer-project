@@ -1,9 +1,9 @@
 package account
 
-
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -36,7 +36,13 @@ func NewService(store Store) *Service {
 }
 
 func (s *Service) GetAccount(ctx context.Context, id uuid.UUID) (Account, error) {
-    return Account{}, nil
+    fmt.Println("Retrieving Account")
+    accnt, acctErr := s.Store.GetAccount(ctx, id)
+    if acctErr != nil {
+        fmt.Println(acctErr)
+        return Account{}, nil
+    }
+    return accnt, nil
 }
 
 func (s *Service) CreateAccount(ctx context.Context, account Account) (Account, error) {
