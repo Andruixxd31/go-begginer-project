@@ -13,10 +13,10 @@ var (
 
 type Book struct {
     Id uuid.UUID
+    AccountId uuid.UUID
     Title string
-    ISBN string
     Author string
-    Genre string
+    Year int
     UpVotes int
 }
 
