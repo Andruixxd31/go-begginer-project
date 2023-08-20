@@ -42,17 +42,22 @@ func NewService(store Store) *Service {
 
 func (s *Service) GetBook(ctx context.Context, id uuid.UUID) (Book, error) {
     fmt.Println("Retrieving Book")
-    accnt, acctErr := s.Store.GetBook(ctx, id)
-    if acctErr != nil {
-        fmt.Println(acctErr)
+    book, BookErr := s.Store.GetBook(ctx, id)
+    if BookErr != nil {
+        fmt.Println(BookErr)
         return Book{}, nil
     }
-    return accnt, nil
-
+    return book, nil
 }
 
 func (s *Service) CreateBook(ctx context.Context, book Book) (Book, error) {
-    return Book{}, nil
+    fmt.Println("Creating Book")
+    bk, BookErr := s.Store.CreateBook(ctx, book)
+    if BookErr != nil {
+        fmt.Println(BookErr)
+        return Book{}, nil
+    }
+    return bk, nil
 }
 
 func (s *Service) UpdateBook(ctx context.Context, book Book) error {

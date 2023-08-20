@@ -50,7 +50,29 @@ func (db *DB) GetBook(ctx context.Context, uuid uuid.UUID) (book.Book, error) {
 }
 
 func (db *DB) CreateBook(ctx context.Context, dbBook book.Book) (book.Book, error) {
-    return book.Book{}, nil
+    dbBook.Id = uuid.New()
+    postRow := BookRow{
+        Id: dbBook.Id,
+        AccountId: dbBook.AccountId,
+        Title: dbBook.Title,
+        Author: dbBook.Author,
+        Year: sql.NullInt32{Int32: int32(dbBook.Year), Valid: true},
+        Upvotes: sql.NullInt32{Int32: int32(dbBook.UpVotes), Valid: true},
+    }
+    row, err := db.Client.NamedQueryContext(
+        ctx,
+        `INSERT INTO book(id, account_id, title, author, year, likes)
+        VALUES(:id, :accountid, :title, :author, :year, :upvotes)
+        `,
+        postRow,
+    )
+    if err != nil {
+        return book.Book{}, fmt.Errorf("error creating book by given values %w", err)
+    }
+    if err := row.Close(); err != nil {
+        return book.Book{}, fmt.Errorf("error closing rows: %w", err)
+    }
+    return dbBook, nil
 }
 
 func (db *DB) UpdateBook(ctx context.Context, dbBook book.Book) error {
