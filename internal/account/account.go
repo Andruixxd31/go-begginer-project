@@ -46,7 +46,14 @@ func (s *Service) GetAccount(ctx context.Context, id uuid.UUID) (Account, error)
 }
 
 func (s *Service) CreateAccount(ctx context.Context, account Account) (Account, error) {
-    return Account{}, nil
+    fmt.Println("Creating Account")
+    accnt, acctErr := s.Store.CreateAccount(ctx, account)
+    if acctErr != nil {
+        fmt.Println(acctErr)
+        return Account{}, nil
+
+    }
+    return accnt, nil
 }
 
 func (s *Service) UpdateAccount(ctx context.Context, account Account) error {
