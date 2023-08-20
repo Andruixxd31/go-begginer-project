@@ -24,7 +24,7 @@ type Book struct {
 type Store interface {
     GetBook(ctx context.Context, id uuid.UUID) (Book, error)
     CreateBook(ctx context.Context, book Book) (Book, error)
-    UpdateBook(ctx context.Context, book Book) error
+    UpdateBook(ctx context.Context, book Book) (Book, error)
     DeleteBook(ctx context.Context, id uuid.UUID) error
     UpVoteBook(ctx context.Context, id uuid.UUID) (int, error)
     GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error)
@@ -60,8 +60,14 @@ func (s *Service) CreateBook(ctx context.Context, book Book) (Book, error) {
     return bk, nil
 }
 
-func (s *Service) UpdateBook(ctx context.Context, book Book) error {
-    return nil
+func (s *Service) UpdateBook(ctx context.Context, book Book) (Book, error) {
+    fmt.Println("Updating Book")
+    bk, acctErr := s.Store.UpdateBook(ctx, book)
+    if acctErr != nil {
+        fmt.Println(acctErr)
+        return Book{}, nil
+    }
+    return bk, nil
 }
 
 func (s *Service) DeleteBook(ctx context.Context, id uuid.UUID) error {

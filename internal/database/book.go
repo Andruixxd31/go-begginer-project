@@ -75,8 +75,30 @@ func (db *DB) CreateBook(ctx context.Context, dbBook book.Book) (book.Book, erro
     return dbBook, nil
 }
 
-func (db *DB) UpdateBook(ctx context.Context, dbBook book.Book) error {
-    return nil
+func (db *DB) UpdateBook(ctx context.Context, dbBook book.Book) (book.Book, error) {
+    updateRow := BookRow{
+        Id: dbBook.Id,
+        Title: dbBook.Title,
+        Author: dbBook.Author,
+        Year: sql.NullInt32{Int32: int32(dbBook.Year), Valid: true},
+    }
+    row, err := db.Client.NamedQueryContext(
+        ctx,
+        `UPDATE book SET
+        Title = :title,
+        Author = :author,
+        Year = :year
+        WHERE id = :id
+        `,
+        updateRow,
+    )
+    if err != nil {
+        return book.Book{}, fmt.Errorf("error creating user by given values %w", err)
+    }
+    if err := row.Close(); err != nil {
+        return book.Book{}, fmt.Errorf("error closing rows: %w", err)
+    }
+    return dbBook, nil
 }
 
 func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
