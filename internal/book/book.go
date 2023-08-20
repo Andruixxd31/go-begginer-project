@@ -3,6 +3,7 @@ package book
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -25,8 +26,8 @@ type Store interface {
     CreateBook(ctx context.Context, book Book) (Book, error)
     UpdateBook(ctx context.Context, book Book) error
     DeleteBook(ctx context.Context, id uuid.UUID) error
-    UpVoteBook(ctx context.Context, id uuid.UUID) error
-    GetUpVoteCount(ctx context.Context, id uuid.UUID) int
+    UpVoteBook(ctx context.Context, id uuid.UUID) (int, error)
+    GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error)
 }
 
 type Service struct {
@@ -40,7 +41,14 @@ func NewService(store Store) *Service {
 }
 
 func (s *Service) GetBook(ctx context.Context, id uuid.UUID) (Book, error) {
-    return Book{}, nil
+    fmt.Println("Retrieving Book")
+    accnt, acctErr := s.Store.GetBook(ctx, id)
+    if acctErr != nil {
+        fmt.Println(acctErr)
+        return Book{}, nil
+    }
+    return accnt, nil
+
 }
 
 func (s *Service) CreateBook(ctx context.Context, book Book) (Book, error) {
@@ -55,10 +63,10 @@ func (s *Service) DeleteBook(ctx context.Context, id uuid.UUID) error {
     return nil
 }
 
-func (s *Service) GetUpVoteCount(ctx context.Context, id uuid.UUID) error {
-    return nil
+func (s *Service) GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error) {
+    return 0, nil
 }
 
-func (s *Service) UpVoteBook(ctx context.Context, id uuid.UUID) int {
-    return 0
+func (s *Service) UpVoteBook(ctx context.Context, id uuid.UUID) (int, error) {
+    return 0, nil
 }

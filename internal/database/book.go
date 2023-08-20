@@ -48,3 +48,23 @@ func (db *DB) GetBook(ctx context.Context, uuid uuid.UUID) (book.Book, error) {
 
     return convertBookRowToBook(bookRow), nil
 }
+
+func (db *DB) CreateBook(ctx context.Context, dbBook book.Book) (book.Book, error) {
+    return book.Book{}, nil
+}
+
+func (db *DB) UpdateBook(ctx context.Context, dbBook book.Book) error {
+    return nil
+}
+
+func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
+    return nil
+}
+
+func (db *DB) GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error) {
+    return 0, nil
+}
+
+func (db *DB) UpVoteBook(ctx context.Context, id uuid.UUID) (int, error) {
+    return 0, nil
+}
