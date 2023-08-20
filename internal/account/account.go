@@ -61,5 +61,12 @@ func (s *Service) UpdateAccount(ctx context.Context, account Account) error {
 }
 
 func (s *Service) DeleteAccount(ctx context.Context, id uuid.UUID) error {
+    fmt.Println("Deleting Account")
+    acctErr := s.Store.DeleteAccount(ctx, id)
+    if acctErr != nil {
+        fmt.Println(acctErr)
+        return nil
+
+    }
     return nil
 }

@@ -65,6 +65,16 @@ func (db *DB) CreateAccount(ctx context.Context, dbAccount account.Account) (acc
 }
 
 func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
+    _, err := db.Client.ExecContext(
+        ctx,
+        `DELETE FROM account
+        WHERE id = $1
+        `,
+        id,
+    )
+    if err != nil {
+        return fmt.Errorf("Error deleting account: %w", err)
+    }
     return nil
 }
 
