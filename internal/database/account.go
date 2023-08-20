@@ -78,6 +78,24 @@ func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
     return nil
 }
 
-func (db *DB) UpdateAccount(ctx context.Context, dbAccount account.Account) error { 
-    return nil
+func (db *DB) UpdateAccount(ctx context.Context, dbAccount account.Account) (account.Account, error) { 
+    updateRow := AccountRow{
+        Id: dbAccount.Id,
+        Name: dbAccount.Name,
+    }
+    row, err := db.Client.NamedQueryContext(
+        ctx,
+        `UPDATE account SET
+        name = :name
+        WHERE id = :id
+        `,
+        updateRow,
+    )
+    if err != nil {
+        return account.Account{}, fmt.Errorf("error creating user by given values %w", err)
+    }
+    if err := row.Close(); err != nil {
+        return account.Account{}, fmt.Errorf("error closing rows: %w", err)
+    }
+    return dbAccount, nil
 }
