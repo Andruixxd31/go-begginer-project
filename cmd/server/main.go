@@ -21,8 +21,8 @@ func Run() error{
         return err
     }
     accountService := account.NewService(db)
-    fmt.Println(accountService.GetAccount(context.Background(), uuid.MustParse("88f26b42-878b-4e60-a715-9773100fca8e")))
-
+    fmt.Println(accountService.GetAccount(context.Background(), uuid.MustParse("94ba2858-0be6-4c31-b967-9f3fbf20f755")))
+    fmt.Println(accountService.UpdateAccount(context.Background(), account.Account{Id: uuid.MustParse("8773488e-f4cc-45bd-859b-8367244a9fe4"), Name: "Andrew"}))
     return nil
 }
 
