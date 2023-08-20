@@ -65,6 +65,12 @@ func (s *Service) UpdateBook(ctx context.Context, book Book) error {
 }
 
 func (s *Service) DeleteBook(ctx context.Context, id uuid.UUID) error {
+    fmt.Println("Deleting Book")
+    BookErr := s.Store.DeleteBook(ctx, id)
+    if BookErr != nil {
+        fmt.Println(BookErr)
+        return nil
+    }
     return nil
 }
 

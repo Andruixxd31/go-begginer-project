@@ -80,6 +80,16 @@ func (db *DB) UpdateBook(ctx context.Context, dbBook book.Book) error {
 }
 
 func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
+    _, err := db.Client.ExecContext(
+        ctx,
+        `DELETE FROM book
+        WHERE id = $1
+        `,
+        id,
+    )
+    if err != nil {
+        return fmt.Errorf("Error deleting book: %w", err)
+    }
     return nil
 }
 

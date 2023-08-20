@@ -23,10 +23,10 @@ func Run() error{
     }
     accountService := account.NewService(db)
     fmt.Println(accountService.GetAccount(context.Background(), uuid.MustParse("94ba2858-0be6-4c31-b967-9f3fbf20f755")))
-    fmt.Println(accountService.UpdateAccount(context.Background(), account.Account{Id: uuid.MustParse("8773488e-f4cc-45bd-859b-8367244a9fe4"), Name: "Andrew"}))
 
     bookService := book.NewService(db)
-    fmt.Println(bookService.GetBook(context.Background(), uuid.MustParse("a7b9b13d-808a-4083-84a5-cbbff33b93b6")))
+    fmt.Println(bookService.DeleteBook(context.Background(), uuid.MustParse("84992d57-7205-4250-92d0-79f9c5be0920")))
+    fmt.Println(bookService.GetBook(context.Background(), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
     return nil
 }
 
