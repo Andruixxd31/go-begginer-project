@@ -24,7 +24,8 @@ func Run() error{
     accountService := account.NewService(db)
     bookService := book.NewService(db)
     fmt.Println(accountService.GetAccount(context.Background(), uuid.MustParse("94ba2858-0be6-4c31-b967-9f3fbf20f755")))
-    fmt.Println(bookService.GetBook(context.Background(), uuid.MustParse("94ba2858-0be6-4c31-b967-9f3fbf20f755")))
+    fmt.Println(bookService.GetBook(context.Background(), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
+    fmt.Println(bookService.GetUpVoteCount(context.Background(), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
     return nil
 }
 

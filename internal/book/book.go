@@ -82,7 +82,13 @@ func (s *Service) DeleteBook(ctx context.Context, id uuid.UUID) error {
 }
 
 func (s *Service) GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error) {
-    return 0, nil
+    fmt.Println("Upvoting Book")
+    count, upVoteErr := s.Store.GetUpVoteCount(ctx, id)
+    if upVoteErr != nil {
+        fmt.Println(upVoteErr)
+        return -1, upVoteErr
+    }
+    return count, nil
 }
 
 func (s *Service) UpVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {

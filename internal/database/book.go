@@ -116,7 +116,20 @@ func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
 }
 
 func (db *DB) GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error) {
-    return 0, nil
+    var bookRow BookRow
+    row := db.Client.QueryRowContext(
+        ctx,
+        `SELECT likes
+        FROM book 
+        WHERE id = $1`,
+        id,
+    )
+    err := row.Scan(&bookRow.Upvotes)
+    if err != nil {
+        return  -1, fmt.Errorf("error fetching book by uuid: %w", err)
+    }
+
+    return convertBookRowToBook(bookRow).UpVotes, nil
 }
 
 func (db *DB) UpVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {
