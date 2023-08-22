@@ -26,7 +26,8 @@ type Store interface {
     CreateBook(ctx context.Context, book Book) (Book, error)
     UpdateBook(ctx context.Context, book Book) (Book, error)
     DeleteBook(ctx context.Context, id uuid.UUID) error
-    UpVoteBook(ctx context.Context, id uuid.UUID) (int, error)
+    UpVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error
+    DownVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error
     GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error)
 }
 
@@ -84,6 +85,16 @@ func (s *Service) GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error)
     return 0, nil
 }
 
-func (s *Service) UpVoteBook(ctx context.Context, id uuid.UUID) (int, error) {
-    return 0, nil
+func (s *Service) UpVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {
+    fmt.Println("Upvoting Book")
+    upVoteErr := s.Store.UpVoteBook(ctx, accountId, bookId)
+    if upVoteErr != nil {
+        fmt.Println(upVoteErr)
+        return nil
+    }
+    return nil
+}
+
+func (s *Service) DownVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {
+    return nil
 }

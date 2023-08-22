@@ -119,6 +119,10 @@ func (db *DB) GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error) {
     return 0, nil
 }
 
-func (db *DB) UpVoteBook(ctx context.Context, id uuid.UUID) (int, error) {
-    return 0, nil
+func (db *DB) UpVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {
+    return nil
+}
+
+func (db *DB) DownVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {
+    return nil
 }
