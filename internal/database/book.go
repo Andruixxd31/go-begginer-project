@@ -126,16 +126,72 @@ func (db *DB) GetUpVoteCount(ctx context.Context, id uuid.UUID) (int, error) {
     )
     err := row.Scan(&bookRow.Upvotes)
     if err != nil {
-        return  -1, fmt.Errorf("error fetching book by uuid: %w", err)
+        return  -1, fmt.Errorf("error fetching upvote count by id: %w", err)
     }
 
     return convertBookRowToBook(bookRow).UpVotes, nil
 }
 
+func (db *DB) UpdateUpvoteBookCount(ctx context.Context, bookId uuid.UUID) error {
+    row, err := db.Client.QueryContext(
+        ctx,
+        `UPDATE book SET
+        likes = tbc.count FROM (SELECT COUNT(*) FROM upvote WHERE book_id = $1) as tbc
+        WHERE id = $1
+        `,
+        bookId,
+    )
+    if err != nil {
+        return fmt.Errorf("error updating upvote count with given id:%w", err)
+    }
+    if err := row.Close(); err != nil {
+        return fmt.Errorf("error closing rows: %w", err)
+    }
+    return nil
+}
+
 func (db *DB) UpVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {
+    postRow := UpvoteRow{
+        AccountId: accountId,
+        BookId: bookId,
+    }
+    row, err := db.Client.NamedQueryContext(
+        ctx,
+        `
+        INSERT INTO upvote (account_id, book_id)
+        VALUES (:accountid, :bookid)
+        ON CONFLICT (account_id, book_id)
+        DO NOTHING
+        `,
+        postRow,
+    )
+    if err != nil {
+        return fmt.Errorf("error creating upvote by given ids %w", err)
+    }
+    if err := row.Close(); err != nil {
+        return fmt.Errorf("error closing rows: %w", err)
+    }
+
+    if err := db.UpdateUpvoteBookCount(ctx, bookId); err != nil {
+        return fmt.Errorf("error updating upvote count after upvote %w", err)
+    }
     return nil
 }
 
 func (db *DB) DownVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.UUID) error {
+    _, err := db.Client.ExecContext(
+        ctx,
+        `DELETE FROM upvote
+        WHERE account_id = $1 AND book_id = $2
+        `,
+        accountId, bookId,
+    )
+    if err != nil {
+        return fmt.Errorf("Error downvoting book: %w", err)
+    }
+
+    if err := db.UpdateUpvoteBookCount(ctx, bookId); err != nil {
+        return fmt.Errorf("error updating upvote count after upvote %w", err)
+    }
     return nil
 }
