@@ -9,6 +9,7 @@ require (
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.16.2
+	github.com/gorilla/mux v1.7.4
 	github.com/jmoiron/sqlx v1.3.5
 )
 
