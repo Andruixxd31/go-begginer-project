@@ -1,13 +1,12 @@
 package main
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/andruixxd31/beginner-project/internal/account"
 	"github.com/andruixxd31/beginner-project/internal/book"
 	"github.com/andruixxd31/beginner-project/internal/database"
-	"github.com/google/uuid"
+	transportHttp "github.com/andruixxd31/beginner-project/internal/transport/http"
 )
 
 func Run() error{
@@ -23,13 +22,11 @@ func Run() error{
     }
     accountService := account.NewService(db)
     bookService := book.NewService(db)
-    fmt.Println(accountService.GetAccount(context.Background(), uuid.MustParse("94ba2858-0be6-4c31-b967-9f3fbf20f755")))
-    fmt.Println(bookService.GetBook(context.Background(), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
-    
-    fmt.Println(bookService.DownVoteBook(context.Background(), uuid.MustParse("94ba2858-0be6-4c31-b967-9f3fbf20f755"), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
-    fmt.Println(bookService.GetUpVoteCount(context.Background(), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
-    fmt.Println(bookService.UpVoteBook(context.Background(), uuid.MustParse("94ba2858-0be6-4c31-b967-9f3fbf20f755"), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
-    fmt.Println(bookService.GetUpVoteCount(context.Background(), uuid.MustParse("17e8300c-ff1c-4bd0-b24d-ecba842fd122")))
+
+    httpHandler := transportHttp.NewHandler(accountService, bookService)
+    if err := httpHandler.Serve(); err != nil {
+        return err
+    }
     return nil
 }
 
