@@ -32,6 +32,9 @@ func NewHandler(booksService BooksService, accountsService AccountsService) *Han
     h.Router = mux.NewRouter()
 
     h.mapRoutes()
+    h.Router.Use(JSONMiddleware)
+    h.Router.Use(LoggingMiddleWare)
+
     h.Server = &http.Server{
         Addr: "0.0.0.0:8080",
         Handler: h.Router,
