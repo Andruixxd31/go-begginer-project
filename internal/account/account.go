@@ -21,7 +21,7 @@ type Account struct {
 type Store interface {
     GetAccount(ctx context.Context, id uuid.UUID) (Account, error)
     CreateAccount(ctx context.Context, account Account) (Account, error)
-    UpdateAccount(ctx context.Context, account Account) (Account, error)
+    UpdateAccount(ctx context.Context, id uuid.UUID, account Account) (Account, error)
     DeleteAccount(ctx context.Context, id uuid.UUID) error
 }
 
@@ -56,9 +56,9 @@ func (s *Service) CreateAccount(ctx context.Context, account Account) (Account, 
     return accnt, nil
 }
 
-func (s *Service) UpdateAccount(ctx context.Context, account Account) (Account, error) {
+func (s *Service) UpdateAccount(ctx context.Context, id uuid.UUID, account Account) (Account, error) {
     fmt.Println("Updating Account")
-    accnt, acctErr := s.Store.UpdateAccount(ctx, account)
+    accnt, acctErr := s.Store.UpdateAccount(ctx, id, account)
     if acctErr != nil {
         fmt.Println(acctErr)
         return Account{}, nil
