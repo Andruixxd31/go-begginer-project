@@ -34,6 +34,7 @@ func NewHandler(booksService BooksService, accountsService AccountsService) *Han
     h.mapRoutes()
     h.Router.Use(JSONMiddleware)
     h.Router.Use(LoggingMiddleWare)
+    h.Router.Use(TimeOutMiddleware)
 
     h.Server = &http.Server{
         Addr: "0.0.0.0:8080",
