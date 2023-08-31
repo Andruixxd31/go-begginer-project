@@ -16,10 +16,6 @@ type BooksService interface {
 
 }
 
-type AccountsService interface {
-
-}
-
 type Handler struct {
     Router *mux.Router
     BooksService BooksService
@@ -48,6 +44,11 @@ func (h *Handler) mapRoutes(){
     h.Router.HandleFunc("/hello-world", func(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "Hello world")
     })
+
+    h.Router.HandleFunc("/api/v1/account/{id}", h.GetAccount).Methods("GET")
+    h.Router.HandleFunc("/api/v1/account", h.CreateAccount).Methods("POST")
+    h.Router.HandleFunc("/api/v1/account", h.UpdateAccount).Methods("PUT")
+    h.Router.HandleFunc("/api/v1/account/{id}", h.DeleteAccount).Methods("DELETE")
 }
 
 func (h *Handler) Serve() error {
