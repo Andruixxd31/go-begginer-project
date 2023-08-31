@@ -1,17 +1,18 @@
 package http
 
 import (
+	"context"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"time"
 
 	"github.com/gorilla/mux"
 )
 
 type BooksService interface {
-
-}
-
-type AccountsService interface {
 
 }
 
@@ -43,12 +44,28 @@ func (h *Handler) mapRoutes(){
     h.Router.HandleFunc("/hello-world", func(w http.ResponseWriter, r *http.Request) {
         fmt.Fprintf(w, "Hello world")
     })
+
+    h.Router.HandleFunc("/api/v1/account/{id}", h.GetAccount).Methods("GET")
+    h.Router.HandleFunc("/api/v1/account", h.CreateAccount).Methods("POST")
+    h.Router.HandleFunc("/api/v1/account", h.UpdateAccount).Methods("PUT")
+    h.Router.HandleFunc("/api/v1/account/{id}", h.DeleteAccount).Methods("DELETE")
 }
 
 func (h *Handler) Serve() error {
-    if err := h.Server.ListenAndServe(); err != nil {
-        return err
-    }
+    go func() {
+        if err := h.Server.ListenAndServe(); err != nil {
+            log.Println(err.Error())
+        }
+    }()
 
+    c := make(chan os.Signal, 1)
+    signal.Notify(c, os.Interrupt)
+    <- c
+
+    ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+    defer cancel()
+    h.Server.Shutdown(ctx)
+
+    log.Println("shut down gracefully")
     return nil
 }

@@ -23,7 +23,7 @@ func Run() error{
     accountService := account.NewService(db)
     bookService := book.NewService(db)
 
-    httpHandler := transportHttp.NewHandler(accountService, bookService)
+    httpHandler := transportHttp.NewHandler(bookService, accountService)
     if err := httpHandler.Serve(); err != nil {
         return err
     }
