@@ -78,9 +78,9 @@ func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
     return nil
 }
 
-func (db *DB) UpdateAccount(ctx context.Context, dbAccount account.Account) (account.Account, error) { 
+func (db *DB) UpdateAccount(ctx context.Context, id uuid.UUID, dbAccount account.Account) (account.Account, error) { 
     updateRow := AccountRow{
-        Id: dbAccount.Id,
+        Id: id,
         Name: dbAccount.Name,
     }
     row, err := db.Client.NamedQueryContext(
@@ -97,5 +97,5 @@ func (db *DB) UpdateAccount(ctx context.Context, dbAccount account.Account) (acc
     if err := row.Close(); err != nil {
         return account.Account{}, fmt.Errorf("error closing rows: %w", err)
     }
-    return dbAccount, nil
+    return convertAccountRowToAccount(updateRow), nil
 }
