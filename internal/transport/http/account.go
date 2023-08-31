@@ -18,6 +18,10 @@ type AccountsService interface {
     DeleteAccount(ctx context.Context, id uuid.UUID) error
 }
 
+type Response struct {
+    Message string
+}
+
 func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r) 
     id := vars["id"]
@@ -81,5 +85,22 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteAccount(w http.ResponseWriter, r *http.Request) {
-     
+    vars := mux.Vars(r) 
+    id := vars["id"]
+    if id == "" {
+        w.WriteHeader(http.StatusBadGateway)
+        return
+    }
+
+    err := h.AccountsService.DeleteAccount(r.Context(), uuid.MustParse(id))
+    if err != nil {
+        log.Print(err)
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+
+    if err := json.NewEncoder(w).Encode(Response{Message: "Succesfully Deleted Account"}); err != nil {
+        panic(err)
+    }
+
 }
