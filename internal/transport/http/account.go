@@ -3,11 +3,12 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/andruixxd31/beginner-project/internal/account"
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 )
 
 type AccountsService interface {
@@ -18,11 +19,26 @@ type AccountsService interface {
 }
 
 func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
-     
+    vars := mux.Vars(r) 
+    id := vars["id"]
+    if id == "" {
+        w.WriteHeader(http.StatusBadGateway)
+        return
+    }
+
+    account, err := h.AccountsService.GetAccount(r.Context(), uuid.MustParse(id))
+    if err != nil {
+        log.Print(err)
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+
+    if err := json.NewEncoder(w).Encode(account); err != nil {
+        panic(err)
+    }     
 }
 
 func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "CreateAccount")
     var account account.Account
     if err := json.NewDecoder(r.Body).Decode(&account); err != nil {
         return
