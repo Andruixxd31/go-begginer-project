@@ -105,6 +105,7 @@ func (h *Handler) DeleteBook(w http.ResponseWriter, r *http.Request) {
     }
 
     err := h.BooksService.DeleteBook(r.Context(),uuid.MustParse(id)) 
+    fmt.Println("err from transport: ", err)
     if err != nil {
         log.Print(err)
         w.WriteHeader(http.StatusInternalServerError)

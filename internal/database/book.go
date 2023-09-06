@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/andruixxd31/beginner-project/internal/book"
@@ -118,7 +119,7 @@ func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
         return fmt.Errorf("%w", err)
     }
     if rowAffected == 0 {
-        return fmt.Errorf("id does not correspond to any account: %w", err)
+        return fmt.Errorf("id does not correspond to any book: %w", errors.New("No book found"))
     }
     return nil
 }

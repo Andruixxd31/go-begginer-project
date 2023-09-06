@@ -27,16 +27,22 @@ func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    account, err := h.AccountsService.GetAccount(r.Context(), uuid.MustParse(id))
+    resAccount, err := h.AccountsService.GetAccount(r.Context(), uuid.MustParse(id))
     if err != nil {
         log.Print(err)
         w.WriteHeader(http.StatusInternalServerError)
         return
     }
 
-    if err := json.NewEncoder(w).Encode(account); err != nil {
+    if err := json.NewEncoder(w).Encode(resAccount); err != nil {
         panic(err)
     }     
+
+    if (account.Account{}) == resAccount {
+        if err := json.NewEncoder(w).Encode(Response{Message: "Succesfully Deleted Account"}); err != nil {
+            panic(err)
+        }
+    }
 }
 
 func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
