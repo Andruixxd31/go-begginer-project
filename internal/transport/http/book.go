@@ -66,6 +66,32 @@ func (h *Handler) CreateBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateBook(w http.ResponseWriter, r *http.Request) {
+    var bookRequest book.Book
+    vars := mux.Vars(r)
+    id := vars["id"]
+    
+    if id == "" {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
+
+    errDecode := json.NewDecoder(r.Body).Decode(&bookRequest)
+    if errDecode != nil {
+        w.WriteHeader(http.StatusBadRequest)
+        return
+    }
+
+    book, err := h.BooksService.UpdateBook(r.Context(), bookRequest)
+    if err != nil {
+        log.Print(err)
+        w.WriteHeader(http.StatusInternalServerError)
+        return
+    }
+     
+    if err := json.NewEncoder(w).Encode(book); err != nil {
+        panic(err)
+    }
+    w.WriteHeader(http.StatusOK)
 
 }
 
