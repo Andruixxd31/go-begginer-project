@@ -102,7 +102,7 @@ func (db *DB) UpdateBook(ctx context.Context, dbBook book.Book) (book.Book, erro
 }
 
 func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
-    _, err := db.Client.ExecContext(
+    sqlResult, err := db.Client.ExecContext(
         ctx,
         `DELETE FROM book
         WHERE id = $1
@@ -112,6 +112,15 @@ func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
     if err != nil {
         return fmt.Errorf("Error deleting book: %w", err)
     }
+
+    rowAffected, err := sqlResult.RowsAffected()
+    if err != nil {
+        return fmt.Errorf("%w", err)
+    }
+    if rowAffected == 0 {
+        return fmt.Errorf("id does not correspond to any account: %w", err)
+    }
+
     return nil
 }
 
