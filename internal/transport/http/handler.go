@@ -12,9 +12,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type BooksService interface {
-
-}
 
 type Handler struct {
     Router *mux.Router
@@ -23,6 +20,9 @@ type Handler struct {
     Server *http.Server
 }
 
+type Response struct {
+    Message string
+}
 
 func NewHandler(booksService BooksService, accountsService AccountsService) *Handler {
     h := &Handler{
@@ -49,10 +49,18 @@ func (h *Handler) mapRoutes(){
         fmt.Fprintf(w, "Hello world")
     })
 
-    h.Router.HandleFunc("/api/v1/account/{id}", h.GetAccount).Methods("GET")
     h.Router.HandleFunc("/api/v1/account", h.CreateAccount).Methods("POST")
-    h.Router.HandleFunc("/api/v1/account/{id}", h.UpdateAccount).Methods("PUT")
+    h.Router.HandleFunc("/api/v1/account/{id}", h.GetAccount).Methods("GET")
+    h.Router.HandleFunc("/api/v1/account/{id}", h.UpdateAccount).Methods("PATCH")
     h.Router.HandleFunc("/api/v1/account/{id}", h.DeleteAccount).Methods("DELETE")
+
+    h.Router.HandleFunc("/api/v1/book", h.CreateBook).Methods("POST")
+    h.Router.HandleFunc("/api/v1/book/{id}", h.GetBook).Methods("GET")
+    h.Router.HandleFunc("/api/v1/book/{id}", h.UpdateBook).Methods("PATCH")
+    h.Router.HandleFunc("/api/v1/book/{id}", h.DeleteBook).Methods("DELETE")
+    h.Router.HandleFunc("/api/v1/book/upvote/{id}", h.UpVoteBook).Methods("PATCH")
+    h.Router.HandleFunc("/api/v1/book/downvote/{id}", h.DownVoteBook).Methods("PATCH")
+    h.Router.HandleFunc("/api/v1/book/upvote-count/{id}", h.GetUpVoteCount).Methods("GET")
 }
 
 func (h *Handler) Serve() error {
@@ -68,8 +76,8 @@ func (h *Handler) Serve() error {
 
     ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
     defer cancel()
+    log.Println("shut down gracefully")
     h.Server.Shutdown(ctx)
 
-    log.Println("shut down gracefully")
     return nil
 }

@@ -18,12 +18,9 @@ type AccountsService interface {
     DeleteAccount(ctx context.Context, id uuid.UUID) error
 }
 
-type Response struct {
-    Message string
-}
 
 func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r) 
+    vars := mux.Vars(r)
     id := vars["id"]
     if id == "" {
         w.WriteHeader(http.StatusBadGateway)

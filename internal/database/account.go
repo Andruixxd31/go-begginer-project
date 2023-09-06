@@ -65,7 +65,8 @@ func (db *DB) CreateAccount(ctx context.Context, dbAccount account.Account) (acc
 }
 
 func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
-    _, err := db.Client.ExecContext(
+    fmt.Println("id given: ",id)
+    sqlResult, err := db.Client.ExecContext(
         ctx,
         `DELETE FROM account
         WHERE id = $1
@@ -74,6 +75,14 @@ func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
     )
     if err != nil {
         return fmt.Errorf("Error deleting account: %w", err)
+    }
+
+    rowAffected, err := sqlResult.RowsAffected()
+    if err != nil {
+        return fmt.Errorf("%w", err)
+    }
+    if rowAffected == 0 {
+        return fmt.Errorf("id does not correspond to any account: %w", err)
     }
     return nil
 }
