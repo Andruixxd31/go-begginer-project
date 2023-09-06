@@ -120,7 +120,6 @@ func (db *DB) DeleteBook(ctx context.Context, id uuid.UUID) error {
     if rowAffected == 0 {
         return fmt.Errorf("id does not correspond to any account: %w", err)
     }
-
     return nil
 }
 
@@ -177,6 +176,7 @@ func (db *DB) UpVoteBook(ctx context.Context, accountId uuid.UUID, bookId uuid.U
     if err != nil {
         return fmt.Errorf("error creating upvote by given ids %w", err)
     }
+
     if err := row.Close(); err != nil {
         return fmt.Errorf("error closing rows: %w", err)
     }

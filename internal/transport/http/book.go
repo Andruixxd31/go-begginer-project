@@ -120,13 +120,66 @@ func (h *Handler) DeleteBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpVoteBook(w http.ResponseWriter, r *http.Request) {
+    reqVars := mux.Vars(r)    
+    bookid := reqVars["id"]
+    accountId := reqVars["accountid"]
 
+    if bookid == "" || accountId == ""{
+        w.WriteHeader(http.StatusBadGateway)
+        return
+    }
+
+    err := h.BooksService.UpVoteBook(r.Context(), uuid.MustParse(accountId), uuid.MustParse(bookid))
+    if err != nil {
+        log.Print(err)
+        w.WriteHeader(http.StatusInternalServerError)
+    }
+
+    if err := json.NewEncoder(w).Encode(Response{Message: "Upvoted book"}); err != nil {
+        panic(err)
+    }     
+    w.WriteHeader(http.StatusOK)
 }
 
 func (h *Handler) DownVoteBook(w http.ResponseWriter, r *http.Request) {
+    reqVars := mux.Vars(r)    
+    bookid := reqVars["id"]
+    accountId := reqVars["accountid"]
 
+    if bookid == "" || accountId == ""{
+        w.WriteHeader(http.StatusBadGateway)
+        return
+    }
+
+    err := h.BooksService.DownVoteBook(r.Context(), uuid.MustParse(accountId), uuid.MustParse(bookid))
+    if err != nil {
+        log.Print(err)
+        w.WriteHeader(http.StatusInternalServerError)
+    }
+
+    if err := json.NewEncoder(w).Encode(Response{Message: "DownVoted book"}); err != nil {
+        panic(err)
+    }     
+    w.WriteHeader(http.StatusOK)
 }
 
 func (h *Handler) GetUpVoteCount(w http.ResponseWriter, r *http.Request) {
+    reqVars := mux.Vars(r)    
+    bookid := reqVars["id"]
 
+    if bookid == "" {
+        w.WriteHeader(http.StatusBadGateway)
+        return
+    }
+
+    count, err := h.BooksService.GetUpVoteCount(r.Context(), uuid.MustParse(bookid))
+    if err != nil {
+        log.Print(err)
+        w.WriteHeader(http.StatusInternalServerError)
+    }
+
+    if err := json.NewEncoder(w).Encode(Response{Count: count}); err != nil {
+        panic(err)
+    }     
+    w.WriteHeader(http.StatusOK)
 }

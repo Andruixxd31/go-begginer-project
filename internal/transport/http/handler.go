@@ -22,6 +22,7 @@ type Handler struct {
 
 type Response struct {
     Message string
+    Count int
 }
 
 func NewHandler(booksService BooksService, accountsService AccountsService) *Handler {
@@ -58,9 +59,9 @@ func (h *Handler) mapRoutes(){
     h.Router.HandleFunc("/api/v1/book/{id}", h.GetBook).Methods("GET")
     h.Router.HandleFunc("/api/v1/book/{id}", h.UpdateBook).Methods("PATCH")
     h.Router.HandleFunc("/api/v1/book/{id}", h.DeleteBook).Methods("DELETE")
-    h.Router.HandleFunc("/api/v1/book/upvote/{id}", h.UpVoteBook).Methods("PATCH")
-    h.Router.HandleFunc("/api/v1/book/downvote/{id}", h.DownVoteBook).Methods("PATCH")
     h.Router.HandleFunc("/api/v1/book/upvote-count/{id}", h.GetUpVoteCount).Methods("GET")
+    h.Router.HandleFunc("/api/v1/book/upvote/{accountid}/{id}", h.UpVoteBook).Methods("PATCH")
+    h.Router.HandleFunc("/api/v1/book/downvote/{accountid}/{id}", h.DownVoteBook).Methods("PATCH")
 }
 
 func (h *Handler) Serve() error {
