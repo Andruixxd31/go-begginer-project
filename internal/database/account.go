@@ -100,6 +100,8 @@ func (db *DB) UpdateAccount(ctx context.Context, id uuid.UUID, dbAccount account
         `,
         updateRow,
     )
+    fmt.Println(row.Rows)
+    fmt.Println(row.Scan())
     if err != nil {
         return account.Account{}, fmt.Errorf("error creating user by given values %w", err)
     }
