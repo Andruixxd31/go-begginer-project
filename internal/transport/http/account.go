@@ -9,6 +9,7 @@ import (
 	"github.com/andruixxd31/beginner-project/internal/account"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+    "github.com/go-playground/validator/v10"
 )
 
 type AccountsService interface {
@@ -16,6 +17,24 @@ type AccountsService interface {
     CreateAccount(ctx context.Context, account account.Account) (account.Account, error)
     UpdateAccount(ctx context.Context, id uuid.UUID, account account.Account) (account.Account, error)
     DeleteAccount(ctx context.Context, id uuid.UUID) error
+}
+
+type CreateAccountRequest struct {
+    Name string `json:"name" validate:"required"`
+}
+
+type UpdateAccountRequest struct {
+    Name string `json:"name"`
+}
+
+type IdAccountRequest struct {
+    Id uuid.UUID `json:"id"`
+}
+
+func convertCreateAccountRequestToAccount(a CreateAccountRequest) account.Account {
+    return account.Account{
+        Name: a.Name,
+    }
 }
 
 
@@ -47,19 +66,28 @@ func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
-    var account account.Account
+    var account CreateAccountRequest
     if err := json.NewDecoder(r.Body).Decode(&account); err != nil {
         json.NewEncoder(w).Encode(Response{Message: errors.New("Invalid body request").Error()})
         return
     }
 
-    account, err := h.AccountsService.CreateAccount(r.Context(), account)
+    validate := validator.New()
+    err := validate.Struct(account)
+    if err != nil {
+        http.Error(w, "Not a valid account", http.StatusBadGateway)
+        return
+    }
+
+    convertedAccount := convertCreateAccountRequestToAccount(account)
+
+    postedAccount, err := h.AccountsService.CreateAccount(r.Context(), convertedAccount)
     if err != nil {
         json.NewEncoder(w).Encode(Response{Message: errors.New("No id provided").Error()})
         panic(err)
     }
 
-    if err := json.NewEncoder(w).Encode(account); err != nil {
+    if err := json.NewEncoder(w).Encode(postedAccount); err != nil {
         panic(err)
     }     
 }
