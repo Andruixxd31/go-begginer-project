@@ -52,7 +52,7 @@ func (h *Handler) mapRoutes(){
         fmt.Fprintf(w, "Hello world")
     })
 
-    h.Router.HandleFunc("/api/v1/account", h.CreateAccount).Methods("POST")
+    h.Router.HandleFunc("/api/v1/account", JWTAuth(h.CreateAccount)).Methods("POST")
     h.Router.HandleFunc("/api/v1/account/{id}", h.GetAccount).Methods("GET")
     h.Router.HandleFunc("/api/v1/account/{id}", h.UpdateAccount).Methods("PATCH")
     h.Router.HandleFunc("/api/v1/account/{id}", h.DeleteAccount).Methods("DELETE")
