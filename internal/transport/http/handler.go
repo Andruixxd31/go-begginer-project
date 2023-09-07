@@ -20,7 +20,9 @@ type Handler struct {
     Server *http.Server
 }
 
+
 type Response struct {
+    Status int
     Message string
     Count int
 }

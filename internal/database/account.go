@@ -65,7 +65,6 @@ func (db *DB) CreateAccount(ctx context.Context, dbAccount account.Account) (acc
 }
 
 func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
-    fmt.Println("id given: ",id)
     sqlResult, err := db.Client.ExecContext(
         ctx,
         `DELETE FROM account
@@ -78,6 +77,7 @@ func (db *DB) DeleteAccount(ctx context.Context, id uuid.UUID) error {
     }
 
     rowAffected, err := sqlResult.RowsAffected()
+    fmt.Println("affected: ", rowAffected)
     if err != nil {
         return fmt.Errorf("%w", err)
     }
@@ -100,6 +100,8 @@ func (db *DB) UpdateAccount(ctx context.Context, id uuid.UUID, dbAccount account
         `,
         updateRow,
     )
+    fmt.Println(row.Rows)
+    fmt.Println(row.Scan())
     if err != nil {
         return account.Account{}, fmt.Errorf("error creating user by given values %w", err)
     }

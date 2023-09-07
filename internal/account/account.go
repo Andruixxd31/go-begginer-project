@@ -39,8 +39,7 @@ func (s *Service) GetAccount(ctx context.Context, id uuid.UUID) (Account, error)
     fmt.Println("Retrieving Account")
     accnt, acctErr := s.Store.GetAccount(ctx, id)
     if acctErr != nil {
-        fmt.Println(acctErr)
-        return Account{}, nil
+        return Account{}, acctErr
     }
     return accnt, nil
 }
@@ -49,8 +48,7 @@ func (s *Service) CreateAccount(ctx context.Context, account Account) (Account, 
     fmt.Println("Creating Account")
     accnt, acctErr := s.Store.CreateAccount(ctx, account)
     if acctErr != nil {
-        fmt.Println(acctErr)
-        return Account{}, nil
+        return Account{}, acctErr
 
     }
     return accnt, nil
@@ -60,8 +58,7 @@ func (s *Service) UpdateAccount(ctx context.Context, id uuid.UUID, account Accou
     fmt.Println("Updating Account")
     accnt, acctErr := s.Store.UpdateAccount(ctx, id, account)
     if acctErr != nil {
-        fmt.Println(acctErr)
-        return Account{}, nil
+        return Account{}, acctErr
     }
     return accnt, nil
 }
@@ -70,8 +67,7 @@ func (s *Service) DeleteAccount(ctx context.Context, id uuid.UUID) error {
     fmt.Println("Deleting Account")
     acctErr := s.Store.DeleteAccount(ctx, id)
     if acctErr != nil {
-        fmt.Println(acctErr)
-        return nil
+        return acctErr
     }
     return nil
 }

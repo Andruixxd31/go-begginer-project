@@ -3,8 +3,7 @@ package http
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"log"
+	"errors"
 	"net/http"
 
 	"github.com/andruixxd31/beginner-project/internal/book"
@@ -28,12 +27,13 @@ func (h *Handler) GetBook(w http.ResponseWriter, r *http.Request) {
     id := reqVars["id"]
 
     if id == ""{
+        json.NewEncoder(w).Encode(Response{Message: errors.New("No id provided").Error()})
         w.WriteHeader(http.StatusBadGateway)
         return
     }
     book, err := h.BooksService.GetBook(r.Context(), uuid.MustParse(id))
     if err != nil {
-        log.Print(err)
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusInternalServerError)
     }
 
@@ -45,16 +45,15 @@ func (h *Handler) GetBook(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CreateBook(w http.ResponseWriter, r *http.Request) {
     var bookRequest book.Book
-    fmt.Println("req: ", r.Body)
     if err := json.NewDecoder(r.Body).Decode(&bookRequest); err != nil {
+        json.NewEncoder(w).Encode(Response{Message: errors.New("Body Request not valid").Error()})
         w.WriteHeader(http.StatusBadRequest)
         return
     }
-    fmt.Println(bookRequest)
 
     book, err := h.BooksService.CreateBook(r.Context(), bookRequest)
     if err != nil {
-        log.Print(err)
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusInternalServerError)
         return
     }
@@ -71,19 +70,21 @@ func (h *Handler) UpdateBook(w http.ResponseWriter, r *http.Request) {
     id := vars["id"]
     
     if id == "" {
+        json.NewEncoder(w).Encode(Response{Message: errors.New("No id provided").Error()})
         w.WriteHeader(http.StatusBadRequest)
         return
     }
 
-    errDecode := json.NewDecoder(r.Body).Decode(&bookRequest)
-    if errDecode != nil {
+    err := json.NewDecoder(r.Body).Decode(&bookRequest)
+    if err != nil {
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusBadRequest)
         return
     }
 
     book, err := h.BooksService.UpdateBook(r.Context(), bookRequest)
     if err != nil {
-        log.Print(err)
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusInternalServerError)
         return
     }
@@ -100,13 +101,14 @@ func (h *Handler) DeleteBook(w http.ResponseWriter, r *http.Request) {
     id := vars["id"]
     
     if id == "" {
+        json.NewEncoder(w).Encode(Response{Message: errors.New("No id provided").Error()})
         w.WriteHeader(http.StatusBadRequest)
-        return
+        return 
     }
 
     err := h.BooksService.DeleteBook(r.Context(),uuid.MustParse(id)) 
     if err != nil {
-        log.Print(err)
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusInternalServerError)
         return
     }
@@ -131,7 +133,7 @@ func (h *Handler) UpVoteBook(w http.ResponseWriter, r *http.Request) {
 
     err := h.BooksService.UpVoteBook(r.Context(), uuid.MustParse(accountId), uuid.MustParse(bookid))
     if err != nil {
-        log.Print(err)
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusInternalServerError)
     }
 
@@ -147,14 +149,16 @@ func (h *Handler) DownVoteBook(w http.ResponseWriter, r *http.Request) {
     accountId := reqVars["accountid"]
 
     if bookid == "" || accountId == ""{
+        json.NewEncoder(w).Encode(Response{Message: errors.New("No id provided").Error()})
         w.WriteHeader(http.StatusBadGateway)
         return
     }
 
     err := h.BooksService.DownVoteBook(r.Context(), uuid.MustParse(accountId), uuid.MustParse(bookid))
     if err != nil {
-        log.Print(err)
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusInternalServerError)
+        return
     }
 
     if err := json.NewEncoder(w).Encode(Response{Message: "DownVoted book"}); err != nil {
@@ -168,14 +172,16 @@ func (h *Handler) GetUpVoteCount(w http.ResponseWriter, r *http.Request) {
     bookid := reqVars["id"]
 
     if bookid == "" {
+        json.NewEncoder(w).Encode(Response{Message: errors.New("No id provided").Error()})
         w.WriteHeader(http.StatusBadGateway)
         return
     }
 
     count, err := h.BooksService.GetUpVoteCount(r.Context(), uuid.MustParse(bookid))
     if err != nil {
-        log.Print(err)
+        json.NewEncoder(w).Encode(Response{Message: err.Error()})
         w.WriteHeader(http.StatusInternalServerError)
+        return
     }
 
     if err := json.NewEncoder(w).Encode(Response{Count: count}); err != nil {
