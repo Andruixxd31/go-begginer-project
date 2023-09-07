@@ -2,15 +2,21 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/andruixxd31/beginner-project/internal/account"
 	"github.com/andruixxd31/beginner-project/internal/book"
 	"github.com/andruixxd31/beginner-project/internal/database"
 	transportHttp "github.com/andruixxd31/beginner-project/internal/transport/http"
+	"github.com/joho/godotenv"
 )
 
 func Run() error{
-    fmt.Println("Starting up app")
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Could not load env file")
+    }
+
     db, err := database.NewDatabase()
     if err != nil {
         return fmt.Errorf("Failed to connect to db: %w", err)
