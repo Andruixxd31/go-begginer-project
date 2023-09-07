@@ -54,16 +54,16 @@ func (h *Handler) mapRoutes(){
 
     h.Router.HandleFunc("/api/v1/account", JWTAuth(h.CreateAccount)).Methods("POST")
     h.Router.HandleFunc("/api/v1/account/{id}", h.GetAccount).Methods("GET")
-    h.Router.HandleFunc("/api/v1/account/{id}", h.UpdateAccount).Methods("PATCH")
-    h.Router.HandleFunc("/api/v1/account/{id}", h.DeleteAccount).Methods("DELETE")
+    h.Router.HandleFunc("/api/v1/account/{id}", JWTAuth(h.UpdateAccount)).Methods("PATCH")
+    h.Router.HandleFunc("/api/v1/account/{id}", JWTAuth(h.DeleteAccount)).Methods("DELETE")
 
-    h.Router.HandleFunc("/api/v1/book", h.CreateBook).Methods("POST")
+    h.Router.HandleFunc("/api/v1/book", JWTAuth(h.CreateBook)).Methods("POST")
     h.Router.HandleFunc("/api/v1/book/{id}", h.GetBook).Methods("GET")
-    h.Router.HandleFunc("/api/v1/book/{id}", h.UpdateBook).Methods("PATCH")
-    h.Router.HandleFunc("/api/v1/book/{id}", h.DeleteBook).Methods("DELETE")
-    h.Router.HandleFunc("/api/v1/book/upvote-count/{id}", h.GetUpVoteCount).Methods("GET")
+    h.Router.HandleFunc("/api/v1/book/{id}", JWTAuth(h.UpdateBook)).Methods("PATCH")
+    h.Router.HandleFunc("/api/v1/book/{id}", JWTAuth(h.DeleteBook)).Methods("DELETE")
+    h.Router.HandleFunc("/api/v1/book/upvote-count/{id}", JWTAuth(h.GetUpVoteCount)).Methods("GET")
     h.Router.HandleFunc("/api/v1/book/upvote/{accountid}/{id}", h.UpVoteBook).Methods("PATCH")
-    h.Router.HandleFunc("/api/v1/book/downvote/{accountid}/{id}", h.DownVoteBook).Methods("PATCH")
+    h.Router.HandleFunc("/api/v1/book/downvote/{accountid}/{id}", JWTAuth(h.DownVoteBook)).Methods("PATCH")
 }
 
 func (h *Handler) Serve() error {
