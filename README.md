@@ -5,10 +5,14 @@ Project will be made by following the knowledge adquired from the rest-api and b
 ## Running Locally 
 
 ```bash
-$ go run cmd/cli/main.go
+$ make run
 ```
 
 ## Build project
 ```bash
 $ go build -o cli cmd/cli/main.go
 ```
+
+### Tools used
+- Database: Postgres
+- Container: Docker
