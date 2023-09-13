@@ -37,6 +37,12 @@ func convertCreateAccountRequestToAccount(a CreateAccountRequest) account.Accoun
     }
 }
 
+func convertUpdateAccountRequestToAccount(a UpdateAccountRequest) account.Account {
+    return account.Account{
+        Name: a.Name,
+    }
+}
+
 
 func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
@@ -94,7 +100,7 @@ func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r) 
-    var account account.Account
+    var account UpdateAccountRequest
 
     id := vars["id"]
     if id == "" {
@@ -107,14 +113,16 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
         return
     }
 
-    account, err := h.AccountsService.UpdateAccount(r.Context(), uuid.MustParse(id), account)
+    convertedAccount := convertUpdateAccountRequestToAccount(account)
+
+    updatedAccount, err := h.AccountsService.UpdateAccount(r.Context(), uuid.MustParse(id), convertedAccount)
     if err != nil {
         json.NewEncoder(w).Encode(Response{Message: errors.New("No id provided").Error()})
         w.WriteHeader(http.StatusInternalServerError)
         return
     }
 
-    if err := json.NewEncoder(w).Encode(account); err != nil {
+    if err := json.NewEncoder(w).Encode(updatedAccount); err != nil {
         panic(err)
     }     
 }
