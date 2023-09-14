@@ -24,4 +24,20 @@ func TestAccountTable(t *testing.T) {
         assert.Equal(t, newAccount.Name, account.Name)
     })
 
+    t.Run("test delete account", func(t *testing.T) {
+        db, err := NewDatabase()
+        assert.NoError(t, err)
+
+        account, err := db.CreateAccount(context.Background(), account.Account{
+            Name: "Juan",
+        })
+        assert.NoError(t, err)
+
+        delErr := db.DeleteAccount(context.Background(), account.Id)
+        assert.NoError(t, delErr)
+
+        _, getErr := db.GetAccount(context.Background(), account.Id)
+        assert.Error(t, getErr)
+    })
+
 }

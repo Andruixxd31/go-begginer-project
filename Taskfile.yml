@@ -1,0 +1,15 @@
+version: '3'
+
+tasks:
+  integration-test:
+    cmds:
+      - docker compose up -d book-db
+      - go test -tags=integration -v ./...
+    env:
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_TABLE: postgres
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_DB: postgres
+      SSL_MODE: disable
