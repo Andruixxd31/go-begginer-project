@@ -1,5 +1,5 @@
 // go:build e2e
-package test
+package tests
 
 import (
 	"testing"
