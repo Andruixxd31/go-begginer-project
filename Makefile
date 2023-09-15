@@ -15,3 +15,7 @@ test:
 integration-test:
 	docker compose --env-file ./.env up -d book-db
 	go test --tags=integration -v ./...
+
+acceptance-test:
+	docker compose up -d --build
+	go test --tags=e2e -v ./...

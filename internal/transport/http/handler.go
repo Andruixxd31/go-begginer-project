@@ -48,8 +48,8 @@ func NewHandler(booksService BooksService, accountsService AccountsService) *Han
 
 
 func (h *Handler) mapRoutes(){
-    h.Router.HandleFunc("/hello-world", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Hello world")
+    h.Router.HandleFunc("/alive", func(w http.ResponseWriter, r *http.Request) {
+        fmt.Fprintf(w, "I am alive")
     })
 
     h.Router.HandleFunc("/api/v1/account", JWTAuth(h.CreateAccount)).Methods("POST")
